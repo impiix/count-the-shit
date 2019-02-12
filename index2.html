@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<script>
+    var activeModules = [
+        { name: 'module 1' },
+        { name: 'module 2' },
+        { name: 'module 11' },
+        { name: 'module 3' },
+        { name: 'module 10' }
+    ];
+    var customModuleRe = new RegExp('\\d+');
+    var getCustomModuleNumber = function () {
+        var max = 0;
+        for (var i = 0; i < activeModules.length; i++) {
+            var current = customModuleRe.exec(activeModules[i].name);
+            if (current) {
+                var num = parseInt(current[0]);
+                if (!isNaN(num) && num > max) {
+                    max = num;
+                }
+            }
+        }
+        return max;
+    };
+
+    console.log(getCustomModuleNumber());
+
+
+    let activeModules1 = [
+        { name: 'module 1' },
+        { name: 'module 2' },
+        { name: 'module 11' },
+        { name: 'module 3' },
+        { name: 'module 10' }
+    ];
+
+    let getCustomModuleNumber1 = (obj) => obj
+        .map(a => /\d+/.exec(a.name))
+        .filter(a => a && a[0])
+        .map(a => parseInt(a[0]))
+        .filter(a => !isNaN(a))
+        .reduce((a, b) => Math.max(a, b));
+
+
+    console.log(getCustomModuleNumber1(activeModules1));
+
+
+</script>
+<body>
+<div id="root"></div>
+
+</body>
+</html>
