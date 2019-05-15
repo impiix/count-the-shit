@@ -1,29 +1,6 @@
 import React, {Component} from "react";
-import ReactDOM from "react-dom";
-
-let Config = require('Config');
-
-class Number extends React.Component {
-    render() {
-        return (
-            <div className="number" style={{"animationDuration": this.props.ttl * 1.1 / 1000 + 's'}}>
-                {!this.props.hit &&
-                <span>{this.props.operation}</span>
-                }
-            </div>
-        );
-    }
-}
-
-class Status extends React.Component {
-    render() {
-        return (
-            <div>
-                {this.props.playing ? 'Count!' : ''}
-            </div>
-        );
-    }
-}
+import Status from './status.jsx'
+import Number from './number.jsx'
 
 class Game extends React.Component {
     constructor(props) {
@@ -37,7 +14,6 @@ class Game extends React.Component {
     }
 
     componentDidMount() {
-
     }
 
     start() {
@@ -143,9 +119,6 @@ class Game extends React.Component {
     }
 }
 
-// ========================================
-
-ReactDOM.render(<Game />, document.getElementById("root"));
 
 function generateNumbers(ttl)
 {
@@ -160,3 +133,5 @@ function generateNumbers(ttl)
 
     return  {operation: operation, result: result, started: time, ttl: ttl, hit: false};
 }
+
+export default Game;
