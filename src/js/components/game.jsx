@@ -19,11 +19,16 @@ class Game extends React.Component {
     start() {
         this.setState({
             playing: true,
-            score: 0,
-            baseTime: 4000
+            score: 0
         });
+
         this.nameInput.focus();
         this.tick();
+    }
+
+    stop() {
+        this.lost();
+        clearTimeout(this.state.timeout);
     }
 
     tick() {
@@ -51,13 +56,20 @@ class Game extends React.Component {
             numbers: numbers,
             baseTime: this.state.baseTime - interval
         });
-        setTimeout(this.tick.bind(this), this.state.baseTime);
+
+        let definedTimeout = setTimeout(this.tick.bind(this), this.state.baseTime);
+
+        this.setState({
+            timeout: definedTimeout
+        });
+
     }
 
     lost() {
         this.setState({
             playing: false,
-            numbers: []
+            numbers: [],
+            baseTime: 4000
         });
         fetch('http://localhost:3000/score',
             {
@@ -97,6 +109,11 @@ class Game extends React.Component {
                 <div>
                     {!this.state.playing &&
                     <button className="btn btn-lg btn-outline-secondary" onClick={this.start.bind(this)}>Start</button>
+                    }
+                </div>
+                <div>
+                    {this.state.playing &&
+                    <button className="btn btn-lg btn-outline-secondary" onClick={this.stop.bind(this)}>Stop</button>
                     }
                 </div>
                 <div className="game-board">
