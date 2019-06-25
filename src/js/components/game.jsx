@@ -1,6 +1,9 @@
 import React, {Component} from "react";
 import Status from './status.jsx'
 import Number from './number.jsx'
+import Score from './score.jsx'
+
+const API_URI = 'http://localhost:3000/score';
 
 class Game extends React.Component {
     constructor(props) {
@@ -11,9 +14,6 @@ class Game extends React.Component {
             score: 0,
             baseTime: 4000
         };
-    }
-
-    componentDidMount() {
     }
 
     start() {
@@ -71,8 +71,12 @@ class Game extends React.Component {
             numbers: [],
             baseTime: 4000
         });
-        fetch('http://localhost:3000/score',
+        fetch(API_URI,
             {
+                headers: {
+                    "Accept": 'application/json',
+                    "Content-Type": 'application/json'
+                },
                 method: 'POST',
                 body: JSON.stringify({
                     score: this.state.score
@@ -103,34 +107,37 @@ class Game extends React.Component {
     render() {
 
         return (
-            <div className="game">
-                <div>Score: {this.state.score}</div>
-                <div><Status playing={this.state.playing}/></div>
-                <div>
-                    {!this.state.playing &&
-                    <button className="btn btn-lg btn-outline-secondary" onClick={this.start.bind(this)}>Start</button>
-                    }
+            <div className="row">
+                <div className="game col-md">
+                    <div>Score: {this.state.score}</div>
+                    <div>
+                        {!this.state.playing &&
+                        <button className="btn btn-lg btn-outline-secondary" onClick={this.start.bind(this)}>Start</button>
+                        }
+                    </div>
+                    <div>
+                        {this.state.playing &&
+                        <button className="btn btn-lg btn-outline-secondary" onClick={this.stop.bind(this)}>Stop</button>
+                        }
+                    </div>
+                    <div><Status playing={this.state.playing}/></div>
+                    <div className="game-board">
+                        {
+                            this.state.numbers.map((item) => (
+                                <Number key={item.started} operation={item.operation} hit={item.hit} ttl={item.ttl} />
+                            ))
+                        }
+                    </div>
+                    <div className="game-info">
+                        <input
+                            className=""
+                            onKeyPress={this.handleKeyPress.bind(this)}
+                            ref={(input) => { this.nameInput = input; }}
+                        />
+                        <button className="btn btn-lg btn-outline-secondary">Send</button>
+                    </div>
                 </div>
-                <div>
-                    {this.state.playing &&
-                    <button className="btn btn-lg btn-outline-secondary" onClick={this.stop.bind(this)}>Stop</button>
-                    }
-                </div>
-                <div className="game-board">
-                    {
-                        this.state.numbers.map((item) => (
-                            <Number key={item.started} operation={item.operation} hit={item.hit} ttl={item.ttl} />
-                        ))
-                    }
-                </div>
-                <div className="game-info">
-                    <input
-                        className=""
-                        onKeyPress={this.handleKeyPress.bind(this)}
-                        ref={(input) => { this.nameInput = input; }}
-                    />
-                    <button className="btn btn-lg btn-outline-secondary">Send</button>
-                </div>
+                <Score playing={this.state.playing} />
             </div>
         );
     }
